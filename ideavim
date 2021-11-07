@@ -1,0 +1,60 @@
+" 修改leader键
+let mapleader = ','
+set easymotion
+set surround
+" 注释插件模拟
+set commentary
+set relativenumber
+set number
+cet scrolloff=3 " 3 lines above/below cursor when scrolling
+
+set keep-english-in-normal-and-restore-in-insert
+" 突出显示当前行
+set cursorline
+
+" 在状态栏显示正在输入的命令
+set showcmd
+
+" Use Idea to join lines smartly
+set ideajoin
+
+" Vim 的默认寄存器和系统剪贴板共享
+set clipboard+=unnamed
+set history=100000
+
+" 设置文内智能搜索提示
+" 高亮search命中的文本
+set hlsearch
+" 打开增量搜索模式,随着键入即时搜索
+set incsearch
+" 搜索时忽略大小写
+set ignorecase
+" 有一个或以上大写字母时仍大小写敏感
+set smartcase
+" 去掉搜索高亮
+nnoremap <leader>/ :nohls<CR>
+" clear the highlighted search result
+nnoremap <Leader>sc :nohlsearch<CR>
+" Move half page faster
+nnoremap <leader>d  <C-d>
+nnoremap <leader>u  <C-u>
+" Tab operation
+nnoremap tn gt
+nnoremap tp gT
+
+" Move to the start of line
+nnoremap H ^
+
+" Move to the end of line
+nnoremap L $
+
+" Redo
+nnoremap U <C-r>
+
+" Yank to the end of line
+nnoremap Y y$
+
+nmap == :action ReformatCode<cr>
+
+" 快速进入vim模式
+inoremap jk <Esc>
