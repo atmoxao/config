@@ -1,6 +1,6 @@
 " leader
-let mapleader = ','
-let g:mapleader = ','
+let mapleader = ' '
+let g:mapleader = ' '
 
 " syntax
 syntax on
@@ -29,11 +29,6 @@ set noerrorbells                " don't beep
 set visualbell t_vb=            " turn off error beep/flash
 set t_vb=
 set tm=500
-
-
-" show location
-set cursorcolumn
-set cursorline
 
 
 " movement
@@ -200,13 +195,6 @@ map <Leader>sa ggVG"
 " remap U to <C-r> for easier redo
 nnoremap U <C-r>
 
-"Keep search pattern at the center of the screen."
-nnoremap <silent> n nzz
-nnoremap <silent> N Nzz
-nnoremap <silent> * *zz
-nnoremap <silent> # #zz
-nnoremap <silent> g* g*zz
-
 " remove highlight
 noremap <silent><leader>/ :nohls<CR>
 
@@ -226,26 +214,34 @@ nnoremap L $
 cmap w!! w !sudo tee >/dev/null %
 
 call plug#begin('~/.vim/plugged')
-
 Plug 'mhinz/vim-startify'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf', { 'do': { -> fzf#install()  }  }
 Plug 'junegunn/fzf.vim'
 Plug 'jiangmiao/auto-pairs'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'preservim/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin' "目录树 git 状态显示
-Plug 'joom/vim-commentary'
-Plug 'tpope/vim-surround'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
-" 飞机线美化
+Plug 'joom/vim-commentary' " 快速注释
+Plug 'tpope/vim-surround' " 快速编辑包围符号
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 " 这个图标插件要放在靠后的位置才可以正常显示
-Plug 'ryanoasis/vim-devicons'
+Plug 'ryanoasis/vim-devicons' " 图标
+Plug 'junegunn/seoul256.vim'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries'  }
+Plug 'Yggdroot/indentLine' " 缩进线
+Plug 'preservim/tagbar'
+Plug 'dyng/ctrlsf.vim' "替换
+Plug 'mg979/vim-visual-multi', {'branch': 'master'} "多光标操作
 call plug#end()
 
-
-
+" theme
+colo seoul256
+let g:seoul256_background = 236 "设置背景颜色深度
+set background=dark "设置背景颜色为黑色, 必须设置, 否则上面的数值设置没有意义
+" seoul256 (dark):
+"   Range:   233 (darkest) ~ 239 (lightest)
+"   Default: 237
 
 "开启和关闭 NerdTree
 map <leader>n :NERDTreeToggle<CR>
@@ -255,26 +251,13 @@ let NERDTreeShowBookmarks=1 "显示书签
 let NERDTreeIgnore=['\~$', '\.pyc$', '\.swp$'] "设置忽略文件类型
 let NERDTreeWinSize=35 "窗口大小
 
-nnoremap <Leader>h :History<CR>
-nnoremap <Leader>b :Buffers<CR>
-nnoremap <Leader>f :Files<CR>
-
-let g:fzf_preview_window = 'right:60%' " Always enable preview window on the right with 60% width
-let g:fzf_buffers_jump = 1 " [Buffers] Jump to the existing window if possible
-" [[B]Commits] Customize the options used by 'git log'
-let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
-let g:fzf_tags_command = 'ctags -R' " [Tags] Command to generate tags file
-let g:fzf_commands_expect = 'alt-enter,ctrl-x' " [Commands] --expect expression for directly executing the command
-let g:fzf_action = {
-            \ 'ctrl-t': 'tab split',
-            \ 'ctrl-x': 'split',
-            \ 'ctrl-v': 'vsplit'
-            \}
-let g:fzf_layout = { 'down': '~60%' }
-
-
+" pairs
 let g:AutoPairsMapCR = 0
 
+" fzf
+map <leader>b :Buffers<CR>
+map <leader>h :History<CR>
+map <leader>f :Files<CR>
 
 " if hidden is not set, TextEdit might fail.
 set hidden
@@ -387,3 +370,6 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
+
+" tarbar
+nmap <F8> :TagbarToggle<CR>
