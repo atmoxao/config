@@ -1,10 +1,33 @@
 {
     "languageserver": {
-      "golang": {
-        "command": "gopls",
-        "rootPatterns": ["go.mod", ".vim/", ".git/", ".hg/"],
-        "filetypes": ["go"]
-      }
-    }
-  }
-  
+        "golang": {
+            "command": "gopls",
+            "rootPatterns": [
+                "go.mod",
+                ".git/"
+            ],
+            "filetypes": [
+                "go"
+            ]
+        },
+        "intelephense": {
+            "command": "intelephense",
+            "args": [
+                "--stdio"
+            ],
+            "filetypes": [
+                "php"
+            ],
+            "initializationOptions": {
+                "storagePath": "/home/chang/.coc-phpls"
+            }
+        }
+    },
+    "rust-client.rustupPath": "/home/chang/.cargo/bin/rustup",
+    "coc.preferences.formatOnSaveFiletypes": [
+        "rust",
+        "go",
+        "php",
+        "json"
+    ]
+}
