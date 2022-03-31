@@ -37,7 +37,7 @@ set scrolloff=7                 " keep 3 lines when scrolling
 
 " show
 set ruler                       " show the current row and column
-set number                      " show line numbers
+" set number                      " show line numbers
 set nowrap
 set showcmd                     " display incomplete commands
 set showmode                    " display current modes
@@ -227,21 +227,9 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 " 这个图标插件要放在靠后的位置才可以正常显示
 Plug 'ryanoasis/vim-devicons' " 图标
-Plug 'junegunn/seoul256.vim'
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries'  }
 Plug 'Yggdroot/indentLine' " 缩进线
-Plug 'preservim/tagbar'
-Plug 'dyng/ctrlsf.vim' "替换
-Plug 'mg979/vim-visual-multi', {'branch': 'master'} "多光标操作
+Plug 'KabbAmine/yowish.vim'
 call plug#end()
-
-" theme
-colo seoul256
-let g:seoul256_background = 236 "设置背景颜色深度
-set background=dark "设置背景颜色为黑色, 必须设置, 否则上面的数值设置没有意义
-" seoul256 (dark):
-"   Range:   233 (darkest) ~ 239 (lightest)
-"   Default: 237
 
 "开启和关闭 NerdTree
 map <leader>n :NERDTreeToggle<CR>
@@ -370,6 +358,8 @@ command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organize
 " Add status line support, for integration with other plugin, checkout `:h coc-status`
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-
-" tarbar
-nmap <F8> :TagbarToggle<CR>
+autocmd vimenter * hi Normal guibg=NONE ctermbg=NONE " transparent bg
+colorscheme yowish
+let g:yowish = {}
+let g:yowish.option1 = 'foo'
+let g:yowish.option2 = 0
