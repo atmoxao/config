@@ -19,11 +19,10 @@
                 "php"
             ],
             "initializationOptions": {
-                "storagePath": "/home/chang/.coc-phpls"
+                "storagePath": "~/.coc-phpls"
             }
         }
     },
-    "rust-client.rustupPath": "/home/chang/.cargo/bin/rustup",
     "coc.preferences.formatOnSaveFiletypes": [
         "rust",
         "go",
