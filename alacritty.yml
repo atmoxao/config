@@ -1,0 +1,187 @@
+window.opacity: 0.95
+save_to_clipboard: true
+dynamic_title: true
+# 设置字体
+font:
+  normal:
+    family: "CodeNewRoman Nerd Font"
+
+  # 字大小
+  size: 14
+
+  offset:
+    x: 0
+    y: 0
+  glyph_offset:
+    x: 0
+    y: 0
+
+window:
+  padding:
+    x: 2
+    y: 2
+    
+  opacity: 0.95
+    
+  dimensions:
+    columns: 120
+    lines: 48
+
+scrolling:
+# 回滚缓冲区中的最大行数,指定“0”将禁用滚动。
+  history: 10000
+
+  # 滚动行数 
+  multiplier: 10
+  
+   # 自动滚动至最新行
+  auto_scroll: true
+
+# 如果为‘true’，则使用亮色变体绘制粗体文本。
+draw_bold_text_with_bright_colors: false
+
+# 光标配置
+cursor:  
+  # 光标样式
+  style:
+    # 光标形状
+    #
+    # 可以为下面的值:
+    #   - ▇ Block
+    #   - _ Underline
+    #   - | Beam
+    shape: Beam
+
+    # 光标闪烁状态
+    #
+    # 可以为下面的值:
+    #   - Never: Prevent the cursor from ever blinking
+    #   - Off: Disable blinking by default
+    #   - On: Enable blinking by default
+    #   - Always: Force the cursor to always blink
+    blinking: On
+
+  # Vi 模式下的光标样式
+  # 同上面的配置项，如果设置为 None 那么会使用普通模式下的光标配置
+#  vi_mode_style: None
+
+  # 毫秒为单位的光标闪烁间隔
+  # blink_interval: 750
+
+
+  # Thickness of the cursor relative to the cell width as floating point number
+  # from `0.0` to `1.0`.
+  #thickness: 0.15
+
+
+selection:
+  semantic_escape_chars: ',│`|:"'' ()[]{}<>'
+  save_to_clipboard: true
+
+live_config_reload: true
+
+key_bindings:
+  - { key: V,        mods: Alt, 		    action: PasteSelection   }
+  - { key: C,        mods: Alt,         action: Copy             }
+  - { key: Insert,   mods: Shift,       action: PasteSelection   }
+  - { key: F11,      mods: Alt,         action: ToggleFullscreen }
+  - { key: PageUp,                      action: ScrollHalfPageUp }
+  - { key: PageDown,                    action: ScrollHalfPageDown }
+  - { key: Q,        mods: Alt,         action: Quit }
+  - { key: T,        mods: Alt,         action: ToggleViMode }
+  - { key: R,        mods: Alt,           action: ResetFontSize    }
+  - { key: I,        mods: Alt,           action: IncreaseFontSize }
+  - { key: D,        mods: Alt,           action: DecreaseFontSize }
+  
+
+  
+# 鼠标配置
+mouse:  
+  # 点击配置
+  #
+  # 双击和三击的判定等待时间，数值越小，需要快速的双击才能判定为双击操作
+  # double_click: { threshold: 300 }
+  # triple_click: { threshold: 300 }
+
+  # 打字的时候临时隐藏鼠标
+  hide_when_typing: true
+
+  hints:
+    # 配置单击 URL 时的动作
+    #
+    # 单击被识别为URL的文本时，将执行所指定的程序。 URL始终作为最后一个参数添加到命令中。 
+    # 如果设置为 None，那么禁用此功能
+    #
+    # Default:
+    #   - (macOS) open
+    #   - (Linux/BSD) xdg-open
+    #   - (Windows) explorer
+    # launcher:
+    #  program: xdg-open
+    #  args: []
+
+    # URL modifiers
+    #
+    # 配置修饰键，Alacritty 默认单击就打开 URL，如果将此项配置为 Command，那么需要按住 Command 然后单击
+    modifiers: Control
+    
+    mouse_bindings:
+    - { mouse: Middle, action: PasteSelection }
+    
+
+# Shell
+#
+# 随终端打开时启动的 Shell
+#
+# Default:
+#   - (macOS) /bin/bash --login
+#   - (Linux/BSD) user login shell
+#   - (Windows) powershell
+#shell:
+#  program: C:\\Program Files\\Git\\bin\\bash.exe
+#  args:
+#    - --login -i
+
+
+# 启动时的目录
+#
+# 如果是 None 那么会使用父进程的工作目录
+working_directory: C:\\Users\\001
+
+# Alt 和字符连按的时候发送 ESC (\x1b) 
+alt_send_esc: true
+    
+#background_opacity: 0.85
+
+# Colors (PaperColor - Dark)
+colors:
+  # Default colors
+  primary:
+    background: '0x1c1c1c'
+    foreground: '0x808080'
+
+  cursor:
+    text: '0x1c1c1c'
+    cursor: '0x808080'
+
+  # Normal colors
+  normal:
+    black:   '0x1c1c1c'
+    red:     '0xaf005f'
+    green:   '0x5faf00'
+    yellow:  '0xd7af5f'
+    blue:    '0x5fafd7'
+    magenta: '0x808080'
+    cyan:    '0xd7875f'
+    white:   '0xd0d0d0'
+
+  # Bright colors
+  bright:
+    black:   '0x585858'
+    red:     '0x5faf5f'
+    green:   '0xafd700'
+    yellow:  '0xaf87d7'
+    blue:    '0xffaf00'
+    magenta: '0xffaf00'
+    cyan:    '0x00afaf'
+    white:   '0x5f8787'
