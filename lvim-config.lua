@@ -1,31 +1,36 @@
+
+--[[
+lvim is the global options object
+
+Linters should be
+filled in as strings with either
+a global executable or a path to
+an executable
+]]
+-- THESE ARE EXAMPLE CONFIGS FEEL FREE TO CHANGE TO WHATEVER YOU WANT
+
 -- general
 lvim.log.level = "warn"
-lvim.format_on_save = true
--- lvim.colorscheme = "onedarker"
--- lvim.colorscheme = "one-nvim"
-lvim.colorscheme = "vscode"
--- vim.opt.background = "light"
--- Lua:
--- For dark theme
-vim.g.vscode_style = "dark"
--- For light theme
--- vim.g.vscode_style = "light"
--- Enable transparent background
-vim.g.vscode_transparent = 1
--- Enable italic comment
-vim.g.vscode_italic_comment = 1
--- Disable nvim-tree background color
-vim.g.vscode_disable_nvimtree_bg = true
-vim.cmd([[colorscheme vscode]])
-lvim.transparent_window = true
+lvim.format_on_save.enabled = false
+lvim.colorscheme = "lunar"
+-- to disable icons and use a minimalist setup, uncomment the following
+lvim.use_icons = true
+vim.opt.relativenumber = true
+lvim.builtin.treesitter.rainbow.enable = true
+
 -- keymappings [view all the defaults by pressing <leader>Lk]
 lvim.leader = "space"
 -- add your own keymapping
 lvim.keys.normal_mode["<C-s>"] = ":w<cr>"
--- edit a default keymapping
-lvim.keys.normal_mode["<C-q>"] = ":q<cr>"
+lvim.keys.normal_mode["<S-l>"] = ":BufferLineCycleNext<CR>"
+lvim.keys.normal_mode["<S-h>"] = ":BufferLineCyclePrev<CR>"
+-- unmap a default keymapping
+-- vim.keymap.del("n", "<C-Up>")
+-- override a default keymapping
+-- lvim.keys.normal_mode["<C-q>"] = ":q<cr>" -- or vim.keymap.set("n", "<C-q>", ":q<cr>" )
 
-lvim.keys.normal_mode["U"] = "<C-r>"
+-- Change Telescope navigation to use j and k for navigation and n and p for history in both input and normal mode.
+-- we use protected-mode (pcall) just in case the plugin wasn't loaded yet.
 local _, actions = pcall(require, "telescope.actions")
 lvim.builtin.telescope.defaults.mappings = {
   -- for input mode
@@ -41,29 +46,36 @@ lvim.builtin.telescope.defaults.mappings = {
     ["<C-k>"] = actions.move_selection_previous,
   },
 }
-lvim.builtin.which_key.mappings["o"] = { "<cmd>:SymbolsOutline<CR>", "SymbolsOutline" }
+
+-- Change theme settings
+-- lvim.builtin.theme.options.dim_inactive = true
+-- lvim.builtin.theme.options.style = "storm"
 
 -- Use which-key to add extra bindings with the leader-key prefix
 lvim.builtin.which_key.mappings["P"] = { "<cmd>Telescope projects<CR>", "Projects" }
+lvim.builtin.which_key.mappings["S"] = { ":SymbolsOutline<CR>", "SymbolsOutline" }
 lvim.builtin.which_key.mappings["t"] = {
-  name = "Diagnostics",
-  t = { "<cmd>TroubleToggle<cr>", "trouble" },
-  w = { "<cmd>TroubleToggle workspace_diagnostics<cr>", "workspace" },
-  d = { "<cmd>TroubleToggle document_diagnostics<cr>", "document" },
-  q = { "<cmd>TroubleToggle quickfix<cr>", "quickfix" },
-  l = { "<cmd>TroubleToggle loclist<cr>", "loclist" },
-  r = { "<cmd>TroubleToggle lsp_references<cr>", "references" },
+  name = "+Trouble",
+  r = { "<cmd>Trouble lsp_references<cr>", "References" },
+  f = { "<cmd>Trouble lsp_definitions<cr>", "Definitions" },
+  d = { "<cmd>Trouble document_diagnostics<cr>", "Diagnostics" },
+  q = { "<cmd>Trouble quickfix<cr>", "QuickFix" },
+  l = { "<cmd>Trouble loclist<cr>", "LocationList" },
+  w = { "<cmd>Trouble workspace_diagnostics<cr>", "Workspace Diagnostics" },
 }
+
+-- TODO: User Config for predefined plugins
+-- After changing plugin config exit and reopen LunarVim, Run :PackerInstall :PackerCompile
 lvim.builtin.alpha.active = true
-vim.opt.number = true
 lvim.builtin.alpha.mode = "dashboard"
-lvim.builtin.notify.active = true
 lvim.builtin.terminal.active = true
 lvim.builtin.nvimtree.setup.view.side = "left"
-lvim.builtin.nvimtree.show_icons.git = 0
+lvim.builtin.nvimtree.setup.renderer.icons.show.git = false
 
+-- if you don't want all the parsers change this to a table of the ones you want
 lvim.builtin.treesitter.ensure_installed = {
   "bash",
+  "c",
   "javascript",
   "json",
   "lua",
@@ -74,59 +86,100 @@ lvim.builtin.treesitter.ensure_installed = {
   "rust",
   "java",
   "yaml",
-  "php",
-  "go",
 }
 
 lvim.builtin.treesitter.ignore_install = { "haskell" }
-lvim.builtin.treesitter.highlight.enabled = true
+lvim.builtin.treesitter.highlight.enable = true
 
 -- generic LSP settings
 
-lvim.lsp.automatic_servers_installation = true
-lvim.builtin.sell_soul_to_devel = true
+-- -- make sure server will always be installed even if the server is in skipped_servers list
+lvim.lsp.installer.setup.ensure_installed = {
+  "sumneko_lua",
+  "jsonls",
+}
+-- -- change UI setting of `LspInstallInfo`
+-- -- see <https://github.com/williamboman/nvim-lsp-installer#default-configuration>
+-- lvim.lsp.installer.setup.ui.check_outdated_servers_on_open = false
+-- lvim.lsp.installer.setup.ui.border = "rounded"
+-- lvim.lsp.installer.setup.ui.keymaps = {
+--     uninstall_server = "d",
+--     toggle_server_expand = "o",
+-- }
 
+-- ---@usage disable automatic installation of servers
+-- lvim.lsp.installer.setup.automatic_installation = false
+
+-- ---configure a server manually. !!Requires `:LvimCacheReset` to take effect!!
+-- ---see the full default list `:lua print(vim.inspect(lvim.lsp.automatic_configuration.skipped_servers))`
+-- vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "pyright" })
+-- local opts = {} -- check the lspconfig documentation for a list of all possible options
+-- require("lvim.lsp.manager").setup("pyright", opts)
+
+-- ---remove a server from the skipped list, e.g. eslint, or emmet_ls. !!Requires `:LvimCacheReset` to take effect!!
+-- ---`:LvimInfo` lists which server(s) are skipped for the current filetype
+-- lvim.lsp.automatic_configuration.skipped_servers = vim.tbl_filter(function(server)
+--   return server ~= "emmet_ls"
+-- end, lvim.lsp.automatic_configuration.skipped_servers)
+
+-- -- you can set a custom on_attach function that will be used for all the language servers
+-- -- See <https://github.com/neovim/nvim-lspconfig#keybindings-and-completion>
+-- lvim.lsp.on_attach_callback = function(client, bufnr)
+--   local function buf_set_option(...)
+--     vim.api.nvim_buf_set_option(bufnr, ...)
+--   end
+--   --Enable completion triggered by <c-x><c-o>
+--   buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
+-- end
+
+-- -- set a formatter, this will override the language server formatting capabilities (if it exists)
+local formatters = require "lvim.lsp.null-ls.formatters"
+formatters.setup {
+  { command = "black", filetypes = { "python" } },
+  { command = "isort", filetypes = { "python" } },
+  {
+    -- each formatter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
+    command = "prettier",
+    ---@usage arguments to pass to the formatter
+    -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
+    extra_args = { "--print-with", "100" },
+    ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
+    filetypes = { "typescript", "typescriptreact" },
+  },
+}
+
+-- -- set additional linters
+local linters = require "lvim.lsp.null-ls.linters"
+linters.setup {
+  { command = "flake8", filetypes = { "python" } },
+  {
+    -- each linter accepts a list of options identical to https://github.com/jose-elias-alvarez/null-ls.nvim/blob/main/doc/BUILTINS.md#Configuration
+    command = "shellcheck",
+    ---@usage arguments to pass to the formatter
+    -- these cannot contain whitespaces, options such as `--line-width 80` become either `{'--line-width', '80'}` or `{'--line-width=80'}`
+    extra_args = { "--severity", "warning" },
+  },
+  {
+    command = "codespell",
+    ---@usage specify which filetypes to enable. By default a providers will attach to all the filetypes it supports.
+    filetypes = { "javascript", "python", "go", "php", "rust" },
+  },
+}
+
+-- Additional Plugins
 lvim.plugins = {
   {
-    "gelfand/copilot.vim",
-    disable = not lvim.builtin.sell_soul_to_devel,
-    config = function()
-      -- copilot assume mapped
-      vim.g.copilot_assume_mapped = true
-      vim.g.copilot_no_tab_map = true
-    end
+    "npxbr/glow.nvim",
+    ft = {"markdown"}
+    -- run = "yay -S glow"
   },
   {
-    "hrsh7th/cmp-copilot",
-    disable = not lvim.builtin.sell_soul_to_devel,
-    config = function()
-      lvim.builtin.cmp.formatting.source_names["copilot"] = "(Cop)"
-      table.insert(lvim.builtin.cmp.sources, { name = "copilot" })
-    end
-  },
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    event = "BufRead",
-    setup = function()
-      vim.g.indentLine_enabled = 1
-      vim.g.indent_blankline_char = "▏"
-      vim.g.indent_blankline_filetype_exclude = { "help", "terminal", "dashboard" }
-      vim.g.indent_blankline_buftype_exclude = { "terminal" }
-      vim.g.indent_blankline_show_trailing_blankline_indent = false
-      vim.g.indent_blankline_show_first_indent_level = false
-    end
-  },
-  {
-    "ethanholz/nvim-lastplace",
+    "phaazon/hop.nvim",
     event = "BufRead",
     config = function()
-      require("nvim-lastplace").setup({
-        lastplace_ignore_buftype = { "quickfix", "nofile", "help" },
-        lastplace_ignore_filetype = {
-          "gitcommit", "gitrebase", "svn", "hgcommit",
-        },
-        lastplace_open_folds = true,
-      })
+      require("hop").setup()
+      vim.api.nvim_set_keymap("n", "s", ":HopChar1<cr>", { silent = true })
+      vim.api.nvim_set_keymap("n", "S", ":HopChar2<cr>", { silent = true })
     end,
   },
   {
@@ -136,16 +189,8 @@ lvim.plugins = {
       require("numb").setup {
         show_numbers = true, -- Enable 'number' for the window while peeking
         show_cursorline = true, -- Enable 'cursorline' for the window while peeking
-        number_only = true, -- Peek only when the command is only a number instead of when it starts with a number
-        centered_peeking = true, -- Peeked line will be centered relative to window
       }
     end,
-  },
-  {
-    -- https://github.com/charmbracelet/glow
-    "npxbr/glow.nvim",
-    ft = { "markdown" }
-    -- run = "yay -S glow"
   },
   {
     "folke/todo-comments.nvim",
@@ -155,69 +200,36 @@ lvim.plugins = {
     end,
   },
   {
-    "tpope/vim-surround",
-    keys = { "c", "d", "y" },
-    -- make sure to change the value of `timeoutlen` if it's not triggering correctly, see https://github.com/tpope/vim-surround/issues/117
-    setup = function()
-      vim.o.timeoutlen = 500
+    "p00f/nvim-ts-rainbow",
+  },
+  {
+    "romgrk/nvim-treesitter-context",
+    config = function()
+      require("treesitter-context").setup{
+        enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
+        throttle = true, -- Throttles plugin updates (may improve performance)
+        max_lines = 0, -- How many lines the window should span. Values <= 0 mean no limit.
+        patterns = { -- Match patterns for TS nodes. These get wrapped to match at word boundaries.
+          -- For all filetypes
+          -- Note that setting an entry here replaces all other patterns for this entry.
+          -- By setting the 'default' entry below, you can control which nodes you want to
+          -- appear in the context window.
+          default = {
+            'class',
+
+            'function',
+            'method',
+          },
+        },
+
+      }
     end
   },
   {
-    "simrat39/symbols-outline.nvim",
-    setup = function()
-      vim.g.symbols_outline = {
-        highlight_hovered_item = true,
-        show_guides = true,
-        auto_preview = true,
-        position = 'right',
-        relative_width = true,
-        width = 25,
-        auto_close = false,
-        show_numbers = false,
-        show_relative_numbers = false,
-        show_symbol_details = true,
-        preview_bg_highlight = 'Pmenu',
-        keymaps = { -- These keymaps can be a string or a table for multiple keys
-          close = { "<Esc>", "q" },
-          goto_location = "<Cr>",
-          focus_location = "o",
-          hover_symbol = "<C-space>",
-          toggle_preview = "K",
-          rename_symbol = "r",
-          code_actions = "a",
-        },
-        lsp_blacklist = {},
-        symbol_blacklist = {},
-        symbols = {
-          File = { icon = "", hl = "TSURI" },
-          Module = { icon = "", hl = "TSNamespace" },
-          Namespace = { icon = "", hl = "TSNamespace" },
-          Package = { icon = "", hl = "TSNamespace" },
-          Class = { icon = "𝓒", hl = "TSType" },
-          Method = { icon = "ƒ", hl = "TSMethod" },
-          Property = { icon = "", hl = "TSMethod" },
-          Field = { icon = "", hl = "TSField" },
-          Constructor = { icon = "", hl = "TSConstructor" },
-          Enum = { icon = "ℰ", hl = "TSType" },
-          Interface = { icon = "ﰮ", hl = "TSType" },
-          Function = { icon = "", hl = "TSFunction" },
-          Variable = { icon = "", hl = "TSConstant" },
-          Constant = { icon = "", hl = "TSConstant" },
-          String = { icon = "𝓐", hl = "TSString" },
-          Number = { icon = "#", hl = "TSNumber" },
-          Boolean = { icon = "⊨", hl = "TSBoolean" },
-          Array = { icon = "", hl = "TSConstant" },
-          Object = { icon = "⦿", hl = "TSType" },
-          Key = { icon = "🔐", hl = "TSType" },
-          Null = { icon = "NULL", hl = "TSType" },
-          EnumMember = { icon = "", hl = "TSField" },
-          Struct = { icon = "𝓢", hl = "TSType" },
-          Event = { icon = "🗲", hl = "TSType" },
-          Operator = { icon = "+", hl = "TSOperator" },
-          TypeParameter = { icon = "𝙏", hl = "TSParameter" }
-        }
-      }
-    end
+    "tzachar/cmp-tabnine",
+    run = "./install.sh",
+    requires = "hrsh7th/nvim-cmp",
+    event = "InsertEnter",
   },
   {
     "rmagatti/goto-preview",
@@ -238,87 +250,60 @@ lvim.plugins = {
     end
   },
   {
-    "ray-x/lsp_signature.nvim",
-    event = "BufRead",
-    config = function()
-      require "lsp_signature".setup()
-    end
-  },
-  {
-    "folke/lsp-colors.nvim",
-    event = "BufRead",
-    config = function()
-      require("lsp-colors").setup({
-        Error = "#db4b4b",
-        Warning = "#e0af68",
-        Information = "#0db9d7",
-        Hint = "#10B981"
-      })
-    end
-  },
-  {
     "folke/trouble.nvim",
     cmd = "TroubleToggle",
+  },
+  {
+    "simrat39/symbols-outline.nvim",
     config = function()
-      require("trouble").setup {
-        position = "bottom", -- position of the list can be: bottom, top, left, right
-        height = 10, -- height of the trouble list when position is top or bottom
-        width = 50, -- width of the list when position is left or right
-        icons = true, -- use devicons for filenames
-        mode = "workspace_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
-        fold_open = "", -- icon used for open folds
-        fold_closed = "", -- icon used for closed folds
-        group = true, -- group results by file
-        padding = true, -- add an extra new line on top of the list
-        action_keys = { -- key mappings for actions in the trouble list
-          -- map to {} to remove a mapping, for example:
-          -- close = {},
-          close = "q", -- close the list
-          cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
-          refresh = "r", -- manually refresh
-          jump = { "<cr>", "<tab>" }, -- jump to the diagnostic or open / close folds
-          open_split = { "<c-x>" }, -- open buffer in new split
-          open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
-          open_tab = { "<c-t>" }, -- open buffer in new tab
-          jump_close = { "o" }, -- jump to the diagnostic and close the list
-          toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
-          toggle_preview = "P", -- toggle auto_preview
-          hover = "K", -- opens a small popup with the full multiline message
-          preview = "p", -- preview the diagnostic location
-          close_folds = { "zM", "zm" }, -- close all folds
-          open_folds = { "zR", "zr" }, -- open all folds
-          toggle_fold = { "zA", "za" }, -- toggle fold of current file
-          previous = "k", -- preview item
-          next = "j" -- next item
-        },
-        indent_lines = true, -- add an indent guide below the fold icons
-        auto_open = false, -- automatically open the list when you have diagnostics
-        auto_close = false, -- automatically close the list when you have no diagnostics
-        auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
-        auto_fold = false, -- automatically fold a file trouble list at creation
-        auto_jump = { "lsp_definitions" }, -- for the given modes, automatically jump if there is only a single result
-        signs = {
-          -- icons / text used for a diagnostic
-          error = "",
-          warning = "",
-          hint = "",
-          information = "",
-          other = "﫠"
-        },
-        use_diagnostic_signs = false -- enabling this will use the signs defined in your lsp client
-      }
+      require('symbols-outline').setup()
     end
   },
   {
-    "ray-x/lsp_signature.nvim",
+    "ethanholz/nvim-lastplace",
     event = "BufRead",
     config = function()
-      require "lsp_signature".setup()
+      require("nvim-lastplace").setup({
+        lastplace_ignore_buftype = { "quickfix", "nofile", "help" },
+        lastplace_ignore_filetype = {
+          "gitcommit", "gitrebase", "svn", "hgcommit",
+        },
+        lastplace_open_folds = true,
+      })
+    end,
+  },
+  {
+    "itchyny/vim-cursorword",
+    event = {"BufEnter", "BufNewFile"},
+    config = function()
+      vim.api.nvim_command("augroup user_plugin_cursorword")
+      vim.api.nvim_command("autocmd!")
+      vim.api.nvim_command("autocmd FileType NvimTree,lspsagafinder,dashboard,vista let b:cursorword = 0")
+      vim.api.nvim_command("autocmd WinEnter * if &diff || &pvw | let b:cursorword = 0 | endif")
+      vim.api.nvim_command("autocmd InsertEnter * let b:cursorword = 0")
+      vim.api.nvim_command("autocmd InsertLeave * let b:cursorword = 1")
+      vim.api.nvim_command("augroup END")
     end
   },
-  { 'Mofiqul/vscode.nvim' },
+  {
+    "tpope/vim-surround",
+    -- make sure to change the value of `timeoutlen` if it's not triggering correctly, see https://github.com/tpope/vim-surround/issues/117
+    setup = function()
+     vim.o.timeoutlen = 500
+    end
+  },
 }
 
-lvim.autocommands.custom_groups = {
-  { "BufWinEnter", "*.lua", "setlocal ts=8 sw=8" },
-}
+-- Autocommands (https://neovim.io/doc/user/autocmd.html)
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = { "*.json", "*.jsonc" },
+  -- enable wrap mode for json files only
+  command = "setlocal wrap",
+})
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "zsh",
+  callback = function()
+    -- let treesitter use bash highlight for zsh files as well
+    require("nvim-treesitter.highlight").attach(0, "bash")
+  end,
+})
